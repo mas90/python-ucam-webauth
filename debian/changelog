@@ -1,0 +1,5 @@
+python-raven (0.5.1-1) trusty; urgency=medium
+
+  * Initial packaging
+
+ -- Malcolm Scott <debianpkg@malc.org.uk>  Thu, 21 Aug 2014 22:11:39 +0100

@@ -1,0 +1,36 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: python-raven
+Source: <https://github.com/danielrichman/python-raven>
+
+Files: *
+Copyright: 2013-2014 Daniel Richman
+License: /usr/share/common-licenses/LGPL-3
+ Note: python-raven appears to be dual-licensed GPL-3 and LGPL-3.
+ I (the package maintainer) choose LGPL-3 as canonical due to the
+ mention in the README and due to incompatibility with GPL-3 with
+ the OpenSSL licence, which this package links against.
+ .
+ However the source boilerplate reads:
+ .
+ python-raven is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ .
+ python-raven is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+FILES: debian/*
+Copyright: 2014 Malcolm Scott <debianpkg@malc.org.uk>
+License: /usr/share/common-licenses/GPL-3
+ python-raven is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ .
+ python-raven is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
