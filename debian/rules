@@ -12,12 +12,27 @@ override_dh_auto_clean:
 	dh_auto_clean
 	rm -f ucam_webauth/*.so
 
-override_dh_sphinxdoc:
+
+####
+#
+# Arch-independent mode: just building docs, don't actually build anything else
+
+override_dh_auto_build-indep:
+
+override_dh_auto_test-indep:
+
+override_dh_auto_install-indep:
+	mkdir -p $(CURDIR)/debian/python-raven-doc/usr/share/doc/python-raven/html
 	PYTHONPATH=. http_proxy='127.0.0.1:9' sphinx-build -N -bhtml docs/source/ $(CURDIR)/debian/python-raven-doc/usr/share/doc/python-raven/html
+
+override_dh_sphinxdoc-indep:
+	ls -laR $(CURDIR)/debian/python-raven-doc/usr/share/doc/python-raven/html
 	dh_sphinxdoc -O--buildsystem=pybuild usr/share/doc/python-raven/html
 
-override_dh_auto_install:
-	dh_makeshlibs
-	dh_shlibdeps
-	dh_auto_install
+
+###
+#
+# Arch-dependent mode: don't look for Sphinx docs, they weren't built
+
+override_dh_sphinxdoc-arch:
 

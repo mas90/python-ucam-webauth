@@ -11,7 +11,7 @@ X-Python-Version: >= 2.6.6
 X-Python3-Version: >= 3.1
 
 Package: python-raven
-Architecture: i386 amd64
+Architecture: any
 Depends: ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
 Recommends: python-flask
 Suggests: python-raven-doc
@@ -23,7 +23,7 @@ Description: Ucam-webauth and Raven application agent in Python 2
  This version is for use in Python 2.
 
 Package: python3-raven
-Architecture: i386 amd64
+Architecture: any
 Depends: ${python3:Depends}, ${shlibs:Depends}, ${misc:Depends}
 Recommends: python3-flask
 Suggests: python-raven-doc

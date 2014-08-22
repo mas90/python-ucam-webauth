@@ -1,3 +1,10 @@
+python-raven (0.5.1-2) trusty; urgency=medium
+
+  * Rework arch-dependent vs. arch-independdent package split; Debhelper is
+    not as magic as I expected (fix FTBFS on binary-arch/binary-indep targets)
+
+ -- Malcolm Scott <debianpkg@malc.org.uk>  Fri, 22 Aug 2014 17:43:54 +0100
+
 python-raven (0.5.1-1) trusty; urgency=medium
 
   * Initial packaging
