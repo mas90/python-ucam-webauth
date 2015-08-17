@@ -1,3 +1,9 @@
+python-raven (0.7-1) trusty; urgency=medium
+
+  * New upstream release
+
+ -- Malcolm Scott <debianpkg@malc.org.uk>  Mon, 17 Aug 2015 18:51:08 +0100
+
 python-raven (0.5.1-2) trusty; urgency=medium
 
   * Rework arch-dependent vs. arch-independent package split; Debhelper is
