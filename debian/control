@@ -38,7 +38,6 @@ Package: python-raven-doc
 Architecture: all
 Section: doc
 Depends: ${sphinxdoc:Depends}, ${misc:Depends}
-Recommends: python3-flask
 Description: Ucam-webauth and Raven application agent in Python: documentation
  This package contains the documentation for python-raven / python3-raven.
  .
