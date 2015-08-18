@@ -6,7 +6,8 @@
 export PYBUILD_NAME=raven
 
 %:
-	dh $@ --with python2,python3,sphinxdoc --buildsystem=pybuild
+	# No python3-flask or pybuild in Ubuntu Precise; only build python2 package
+	dh $@ -v --with python2,sphinxdoc --package raven
 
 override_dh_auto_clean:
 	dh_auto_clean

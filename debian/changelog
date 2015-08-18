@@ -1,3 +1,10 @@
+python-raven (0.5.1-2~precise1) precise; urgency=medium
+
+  * Build for precise
+    - No Python 3 package as precise has no python3-flask or dh-python
+
+ -- Malcolm Scott <debianpkg@malc.org.uk>  Tue, 18 Aug 2015 02:22:49 +0100
+
 python-raven (0.5.1-2) trusty; urgency=medium
 
   * Rework arch-dependent vs. arch-independent package split; Debhelper is
