@@ -1,0 +1,15 @@
+python-raven (0.7-1) trusty; urgency=medium
+
+  Since python-raven 0.7, code which uses the Flask decorator must be updated
+  to either set request.trusted_hosts, or to pass can_trust_request_host=True
+  if the web server validates the Host and X-Forwarded-Host HTTP headers
+  provided by the client.
+
+  Failure to do so will now break authentication.
+
+  This is an important security feature to prevent the replay by a malicious
+  third party of authentication responses intended for another website.
+
+  More details: https://pythonhosted.org/python-raven/security.html
+
+ -- Malcolm Scott <debianpkg@malc.org.uk>  Tue, 18 Aug 2015 01:01:58 +0100
