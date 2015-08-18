@@ -20,6 +20,8 @@
 from __future__ import unicode_literals
 
 import sys
+import os
+import base64
 import logging
 import functools
 
@@ -57,6 +59,22 @@ class AuthDecorator(object):
 
     Note that since it uses flask.session, you'll need to set
     :attr:`app.secret_key`.
+
+    We need to be able to reliably determine the hostname of the current
+    website. This is retrieved from :attr:`flask.Request.url`.
+    By default, Werkzeug will respect the value of a ``X-Forwarded-Host``
+    header, which means that a man-in-the-middle can have someone authenticate
+    to *their* website, and forward the response from the WLS on to you.
+    You must either set :attr:`flask.Request.trusted_hosts`, for example
+    like so::
+
+        class R(flask.Request):
+            trusted_hosts = {'www.danielrichman.co.uk'}
+        app.request_class = R
+
+    ... or sanitise both the `Host` header *and* the `X-Forwarded-Host`
+    header in your web-server. If you choose the second option, set
+    `can_trust_request_host`.
 
     This tries to emulate the feel of applying mod_ucam_webauth to a file.
 
@@ -104,6 +122,10 @@ class AuthDecorator(object):
     :type require_ptags: :class:`set` of :class:`str`, or ``None``
     :param require_ptags: require the ptags to contain `any` string in
                           `require_ptags` (i.e., non empty intersection)
+    :type can_trust_request_host: :class:`bool`
+    :param can_trust_request_host: Can we trust the hostname in
+                                   ``request.url``?
+                                   (see :ref:`checking-response-values`)
 
     More complex customisation is possible:
 
@@ -126,7 +148,7 @@ class AuthDecorator(object):
     To log the user out, call :meth:`logout`, which will clear the session
     state. Further, :meth:`logout` returns a :meth:`flask.redirect` to the
     Raven logout page. Be aware that the default flask session handlers are
-    susceptibleto replay attacks.
+    susceptible to replay attacks.
 
     POST requests:
     Since it will redirect to the WLS and back, the auth decorator will
@@ -147,7 +169,8 @@ class AuthDecorator(object):
                     max_life=7200, use_wls_life=False,
                     inactive_timeout=None, issue_bounds=(15,5),
                     require_principal=None,
-                    require_ptags=frozenset(["current"])):
+                    require_ptags=frozenset(["current"]),
+                    can_trust_request_host=False):
         self.desc = desc
         self.aauth = aauth
         self.iact = iact
@@ -158,6 +181,7 @@ class AuthDecorator(object):
         self.issue_bounds = issue_bounds
         self.require_principal = require_principal
         self.require_ptags = require_ptags
+        self.can_trust_request_host = can_trust_request_host
 
     def __call__(self, view_function):
         """
@@ -179,18 +203,42 @@ class AuthDecorator(object):
         functools.update_wrapper(wrapper, view_function)
         return wrapper
 
-    def _prop_helper(self, name):
-        return session.get("_ucam_webauth", {}).get(name, None)
+    @property
+    def _state(self):
+        return session.get("_ucam_webauth", {}).get("state", {})
+
+    @_state.setter
+    def _state(self, new):
+        if "_ucam_webauth" not in session:
+            session["_ucam_webauth"] = {}
+        session["_ucam_webauth"]["state"] = new
+
+    @_state.deleter
+    def _state(self):
+        if "_ucam_webauth" in session:
+            d = session["_ucam_webauth"]
+            if "state" in d:
+                del d["state"]
+
+    @property
+    def _params_token(self):
+        return session.get("_ucam_webauth", {}).get("params_token", None)
+
+    @_params_token.setter
+    def _params_token(self, new):
+        if "_ucam_webauth" not in session:
+            session["_ucam_webauth"] = {}
+        session["_ucam_webauth"]["params_token"] = new
 
     @property
     def principal(self):
         """The current principal, or ``None``"""
-        return self._prop_helper("principal")
+        return self._state.get("principal")
 
     @property
     def ptags(self):
         """The current ptags, or ``None``"""
-        ptags = self._prop_helper("ptags")
+        ptags = self._state.get("ptags")
         if ptags is not None:
             ptags = frozenset(ptags)
         return ptags
@@ -204,25 +252,24 @@ class AuthDecorator(object):
         the :class:`datetime` object used by :class:`ucam_webauth.Response`.
         (`issue` is ``None`` if there is no current session.)
         """
-        return self._prop_helper("issue")
+        return self._state.get("issue")
 
     @property
     def life(self):
         """life of the last WLS response (:class:`int` seconds), or ``None``"""
-        return self._prop_helper("life")
+        return self._state.get("life")
 
     @property
     def last(self):
         """Time (:class:`int` unix timestamp) of the last decorated request"""
-        return self._prop_helper("last")
+        return self._state.get("last")
 
     @property
     def expires(self):
         """When (:class:`int` unix timestamp) the current auth. will expire"""
-        state = session.get("_ucam_webauth", {})
-        if "principal" not in state:
+        if "principal" not in self._state:
             return None
-        expires = self._get_expires(state)
+        expires = self._get_expires(self._state)
         if len(expires) == 0:
             return None
         else:
@@ -239,20 +286,15 @@ class AuthDecorator(object):
         `reason` will be one of "config max life", "wls life" or "inactive".
         """
 
-        state = session.get("_ucam_webauth", {})
-        if "principal" not in state:
+        if "principal" not in self._state:
             return None
-        return self._get_expires(state)
+        return self._get_expires(self._state)
 
     def logout(self):
         """Clear the auth., and return a redirect to the WLS' logout page"""
-        if "_ucam_webauth" in session:
-            session.modified = True
-            del session["_ucam_webauth"]
+        session.modified = True
+        del self._state
         return redirect(self.logout_url, code=303)
-
-    def _wrapped(self, view_function, view_args):
-        """Decorated functions are replaced with this function"""
 
     def before_request(self):
         """
@@ -266,6 +308,8 @@ class AuthDecorator(object):
           * checks if ``flask.session`` is empty - if so, then we deduce that
             the user has cookies disabled, and must abort immediately with
             403 Forbidden, or we will start a redirect loop
+          * checks if `params` matches the token we set (and saved in
+            ``flask.session``) when redirecting to Raven
           * checks if the authentication method used is permitted by `aauth`
             and user-interaction respected `iact` - if not, abort with
             400 Bad Request
@@ -316,10 +360,7 @@ class AuthDecorator(object):
             r = self.response_class(request.args["WLS-Response"])
             return self._handle_response(r)
 
-        if "_ucam_webauth" not in session:
-            session["_ucam_webauth"] = {}
-
-        state = session["_ucam_webauth"]
+        state = self._state
 
         if state.get("response_failure", False):
             del state["response_failure"]
@@ -349,6 +390,8 @@ class AuthDecorator(object):
         Deal with a response in the query string of this request
 
         * checks `url`, `iact`, `aauth` and `issue`
+        * checks that the `params` token matches the one saved in
+          ``flask.session``
         * starts a new session if necessary (see :meth:`session_new`)
         * sets the 'auth failed' flag if necessary
         * redirects to remove ``WLS-Response`` from the url/query string
@@ -357,6 +400,12 @@ class AuthDecorator(object):
 
         url_without_response = self._check_url(response.url)
         if url_without_response is None:
+            abort(400)
+
+        token = self._params_token
+        if token is None or response.params != token:
+            logger.warning("params token mismatch: session=%s response=%s",
+                           token, response.params)
             abort(400)
 
         if response.success:
@@ -375,14 +424,14 @@ class AuthDecorator(object):
                 logger.debug("new session")
                 self.session_new()
 
-            session["_ucam_webauth"] = \
+            self._state = \
                     {"principal": response.principal,
                      "ptags": list(response.ptags),
                      "issue": issue, "life": response.life,
                      "last": time()}
 
         else:
-            session["_ucam_webauth"] = {"response_failure": True}
+            self._state = {"response_failure": True}
 
         return redirect(url_without_response, code=303)
 
@@ -394,11 +443,12 @@ class AuthDecorator(object):
         the URL in the WLS' response, which is equal to the URL specified
         in the request to the WLS and is the URL to which the client was
         redirected after authentication.
-
-        This is necessary to avoid an evil administrator of another website
-        capturing and replaying successful authentications to his website to
-        us.
         """
+
+        if not self.can_trust_request_host and request.trusted_hosts is None:
+            raise RuntimeError("Either set request.trusted_hosts, or sanitise "
+                               "Host/X-Forwarded-Host headers and pass "
+                               "can_trust_request_host = True")
 
         actual_url = request.url
 
@@ -452,7 +502,7 @@ class AuthDecorator(object):
     def _is_new_session(self, response):
         """Is this a new session, or reauthentication (after expiry)?"""
 
-        state = session["_ucam_webauth"]
+        state = self._state
         if "principal" not in state:
             return False
 
@@ -462,8 +512,13 @@ class AuthDecorator(object):
 
     def _redirect_to_wls(self):
         """Create a request and return a redirect to the WLS"""
-        req = self.request_class(request.url, self.desc, self.aauth,
-                                 self.iact, self.msg)
+        if self._params_token is None:
+            self._params_token = \
+                    base64.b64encode(os.urandom(18)).decode("ascii")
+
+        req = self.request_class(url=request.url, desc=self.desc,
+                                 aauth=self.aauth, iact=self.iact,
+                                 msg=self.msg, params=self._params_token)
         return redirect(str(req), code=303)
 
     def _get_expires(self, state):
