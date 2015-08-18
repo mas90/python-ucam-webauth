@@ -1,13 +1,13 @@
 Source: python-raven
 Priority: optional
 Maintainer: Malcolm Scott <debianpkg@malc.org.uk>
-Build-Depends: debhelper (>= 9.0.0), python-dev (>= 2.6.6-3~), python-setuptools, python-nose, python-sphinx (>= 1.0.7+dfsg-1~), python-flask, libssl-dev
+Build-Depends: debhelper (>= 9.0.0), python-all-dev (>= 2.6.6-3~), python-setuptools, python-nose, python-sphinx (>= 1.0.7+dfsg-1~), python-flask, libssl-dev
 Standards-Version: 3.9.5
 Section: python
 Homepage: https://pythonhosted.org/python-raven/
 Vcs-Git: git://github.com/mas90/python-raven
-Vcs-Browser: https://github.com/mas90/python-raven/tree/deb
-X-Python-Version: >= 2.6.6
+Vcs-Browser: https://github.com/mas90/python-raven/tree/deb-precise
+X-Python-Version: >= 2.7
 X-Python3-Version: >= 3.1
 
 Package: python-raven
@@ -26,7 +26,6 @@ Package: python-raven-doc
 Architecture: all
 Section: doc
 Depends: ${sphinxdoc:Depends}, ${misc:Depends}
-Recommends: python3-flask
 Description: Ucam-webauth and Raven application agent in Python: documentation
  This package contains the documentation for python-raven / python3-raven.
  .

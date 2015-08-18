@@ -3,15 +3,17 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-export PYBUILD_NAME=raven
-
 %:
 	# No python3-flask or pybuild in Ubuntu Precise; only build python2 package
-	dh $@ -v --with python2,sphinxdoc --package raven
+	dh $@ -v --with python2,sphinxdoc
 
 override_dh_auto_clean:
 	dh_auto_clean
 	rm -f ucam_webauth/*.so
+	rm -rf python_raven.egg-info
+
+override_dh_auto_install-arch:
+	dh_auto_install --destdir $(CURDIR)/debian/python-raven
 
 
 ####
