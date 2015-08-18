@@ -7,7 +7,7 @@ Section: python
 Homepage: https://pythonhosted.org/python-raven/
 Vcs-Git: git://github.com/mas90/python-raven
 Vcs-Browser: https://github.com/mas90/python-raven/tree/deb
-X-Python-Version: >= 2.6.6
+X-Python-Version: >= 2.7
 X-Python3-Version: >= 3.1
 
 Package: python-raven
