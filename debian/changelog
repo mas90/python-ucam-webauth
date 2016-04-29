@@ -1,3 +1,9 @@
+python-raven (0.8.1-1+xenial1) xenial; urgency=medium
+
+  * Build for xenial (Python 3.5)
+
+ -- Malcolm Scott <debianpkg@malc.org.uk>  Fri, 29 Apr 2016 01:34:52 +0100
+
 python-raven (0.8.1-1) trusty; urgency=medium
 
   * New upstream release
