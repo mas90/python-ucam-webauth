@@ -1,3 +1,16 @@
+python-ucam-webauth (0.9.0-1) bionic; urgency=medium
+
+  The raven Python package is now named ucam_webauth.raven.  Code will need
+  updating to use the new package name.
+
+  The Debian package has also been renamed from python-raven to
+  python-ucam-webauth.
+
+  Another, completely unrelated, Python module called raven and packaged as
+  python-raven is now present in the Debian and Ubuntu archives.
+
+ -- Malcolm Scott <debianpkg@malc.org.uk>  Sat, 05 May 2018 22:32:35 +0100
+
 python-raven (0.7-1) trusty; urgency=medium
 
   Since python-raven 0.7, code which uses the Flask decorator must be updated

@@ -1,3 +1,11 @@
+python-ucam-webauth (0.9.0-1) bionic; urgency=medium
+
+  * New upstream release
+    - The raven module has been moved to ucam_webauth.raven
+    - The package has been renamed from python-raven to python-ucam-webauth
+
+ -- Malcolm Scott <debianpkg@malc.org.uk>  Sat, 05 May 2018 22:31:19 +0100
+
 python-raven (0.8.1-1+xenial1) xenial; urgency=medium
 
   * Build for xenial (Python 3.5)
