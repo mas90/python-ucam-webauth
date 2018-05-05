@@ -1,0 +1,2 @@
+*.egg-info/
+ucam_webauth/*.so
