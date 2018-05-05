@@ -1,0 +1,27 @@
+Description: Tweak setup.py to build ucam_webauth.raven
+Author: Malcolm Scott <debianpkg@malc.org.uk>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: https://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: 2018-05-05
+
+--- python-ucam-webauth-0.9.0.orig/setup.py
++++ python-ucam-webauth-0.9.0/setup.py
+@@ -12,7 +12,7 @@ rsamodule = Extension('ucam_webauth.rsa'
+ setup(
+     name = "python-ucam-webauth",
+     version = "0.9.0",
+-    packages = ["ucam_webauth"],
++    packages = ["ucam_webauth", "ucam_webauth.raven"],
+     package_data = {"ucam_webauth": ["raven/keys/pubkey*"]},
+     ext_modules = [rsamodule],
+     install_requires = ["setuptools"],
