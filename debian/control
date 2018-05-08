@@ -16,6 +16,8 @@ Depends: ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
 Recommends: python-flask
 Suggests: python-ucam-webauth-doc
 Provides: ${python:Provides}
+Breaks: python-raven (<< 0.9)
+Replaces: python-raven (<< 0.9)
 Description: Ucam-webauth and Raven application agent in Python 2
  Integrate the University of Cambridge's web-based single sign-on system,
  Raven, into a Python-based web application (including decorators for Flask).
@@ -28,6 +30,8 @@ Depends: ${python3:Depends}, ${shlibs:Depends}, ${misc:Depends}
 Recommends: python3-flask
 Suggests: python-ucam-webauth-doc
 Provides: ${python3:Provides}
+Breaks: python3-raven (<< 0.9)
+Replaces: python3-raven (<< 0.9)
 Description: Ucam-webauth and Raven application agent in Python 3
  Integrate the University of Cambridge's web-based single sign-on system,
  Raven, into a Python-based web application (including decorators for Flask).
@@ -38,6 +42,8 @@ Package: python-ucam-webauth-doc
 Architecture: all
 Section: doc
 Depends: ${sphinxdoc:Depends}, ${misc:Depends}
+Breaks: python-raven-doc (<< 0.9)
+Replaces: python-raven-doc (<< 0.9)
 Description: Ucam-webauth and Raven application agent in Python: documentation
  This package contains the documentation for python-ucam-webauth /
  python3-ucam-webauth.
