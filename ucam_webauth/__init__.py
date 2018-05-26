@@ -1,20 +1,3 @@
-# Copyright 2013 Daniel Richman
-#
-# This file is part of python-ucam-webauth
-#
-# python-ucam-webauth is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# python-ucam-webauth is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with python-ucam-webauth.  If not, see <http://www.gnu.org/licenses/>.
-
 """
 The ucam_webauth module implements version 3 of the WAA to WLS protocol.
 
@@ -63,7 +46,7 @@ and more information can be found at `<https://raven.cam.ac.uk/project/>`_.
 from __future__ import unicode_literals
 
 __name__ = "ucam_webauth"
-__version__ = "0.9.0"
+__version__ = "0.9.1"
 __author__ = "Daniel Richman"
 __copyright__ = "Copyright 2013 Daniel Richman"
 __email__ = "main@danielrichman.co.uk"
