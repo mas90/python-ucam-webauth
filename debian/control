@@ -1,28 +1,13 @@
 Source: python-ucam-webauth
 Priority: optional
 Maintainer: Malcolm Scott <debianpkg@malc.org.uk>
-Build-Depends: debhelper (>= 9.0.0), dh-python, python3-all-dev, python-all-dev (>= 2.7), python3-setuptools, python-setuptools, python3-nose, python-nose, python-sphinx (>= 1.0.7+dfsg-1~), python3-flask, python-flask, libssl-dev
+Build-Depends: debhelper (>= 9.0.0), dh-python, python3-all-dev, python3-setuptools, python3-nose, python3-sphinx (>= 1.0.7+dfsg-1~), python3-flask, libssl-dev
 Standards-Version: 3.9.5
 Section: python
 Homepage: https://python-ucam-webauth.readthedocs.io/
 Vcs-Git: https://github.com/mas90/python-ucam-webauth
 Vcs-Browser: https://github.com/mas90/python-ucam-webauth
-X-Python-Version: >= 2.7
 X-Python3-Version: >= 3.1
-
-Package: python-ucam-webauth
-Architecture: any
-Depends: ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
-Recommends: python-flask
-Suggests: python-ucam-webauth-doc
-Provides: ${python:Provides}
-Breaks: python-raven (<< 0.9)
-Replaces: python-raven (<< 0.9)
-Description: Ucam-webauth and Raven application agent in Python 2
- Integrate the University of Cambridge's web-based single sign-on system,
- Raven, into a Python-based web application (including decorators for Flask).
- .
- This version is for use in Python 2.
 
 Package: python3-ucam-webauth
 Architecture: any
