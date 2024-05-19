@@ -24,7 +24,7 @@ Last-Update: 2024-05-19
              # https://github.com/mitsuhiko/flask/issues/968
 -            url = redir.location[len("http://localhost"):]
 +            url = redir.location
-+            if url.startswith("http://localhost")
++            if url.startswith("http://localhost"):
 +                url = url[len("http://localhost"):]
              response = client.get(url, follow_redirects=True)
              assert response.status_code == 200
