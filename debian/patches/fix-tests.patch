@@ -1,0 +1,31 @@
+Description: Fix tests
+ Don't assume that URLs are fully-qualified, as some library change means
+ they aren't any more.
+Author: Malcolm Scott <debianpkg@malc.org.uk>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: https://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: 2024-05-19
+
+--- python-ucam-webauth-0.9.2.orig/tests/test_auth_decorator.py
++++ python-ucam-webauth-0.9.2/tests/test_auth_decorator.py
+@@ -963,7 +963,9 @@ class TestAuthDecorator(object):
+ 
+             # ... now pick the first auth back up again and complete it
+             # https://github.com/mitsuhiko/flask/issues/968
+-            url = redir.location[len("http://localhost"):]
++            url = redir.location
++            if url.startswith("http://localhost")
++                url = url[len("http://localhost"):]
+             response = client.get(url, follow_redirects=True)
+             assert response.status_code == 200
+ 
