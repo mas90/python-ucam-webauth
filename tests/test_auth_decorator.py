@@ -963,7 +963,9 @@ class TestAuthDecorator(object):
 
             # ... now pick the first auth back up again and complete it
             # https://github.com/mitsuhiko/flask/issues/968
-            url = redir.location[len("http://localhost"):]
+            url = redir.location
+            if url.startswith("http://localhost"):
+                url = url[len("http://localhost"):]
             response = client.get(url, follow_redirects=True)
             assert response.status_code == 200
 
